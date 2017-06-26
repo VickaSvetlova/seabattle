@@ -50,7 +50,7 @@ public class Cannon : MonoBehaviour
         }
         if (Aim())
         {
-            Debug.Log("start corutine");
+
             //_target.TakeDamage(_damage);
             _color = Color.red;
             _isBulletReady = false;           
