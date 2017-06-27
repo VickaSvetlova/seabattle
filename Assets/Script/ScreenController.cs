@@ -35,6 +35,7 @@ public class ScreenController : MonoBehaviour
     }
     private void Inputs(float _input)
     {
+
         if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Moved)
         {
             Debug.Log("touch");
