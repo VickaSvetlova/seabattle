@@ -85,13 +85,17 @@ public class Whirpool : MonoBehaviour {
     }
 #endregion
 
-    void Awake()
+   private void Awake()
     {
         if (!Instance) Instance = this;
         ship1 = GameObject.FindGameObjectWithTag("ship_player").GetComponent<Ship>().data;
         ship2 = GameObject.FindGameObjectWithTag("ship_enemy").GetComponent<Ship>().data;
         _aim_left.enabled = false;
         _aim_right.enabled = false;
+        input = _CustomInput.Instance;
+    }
+    private void Start()
+    {
         input = _CustomInput.Instance;
     }
 
