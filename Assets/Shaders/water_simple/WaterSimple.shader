@@ -1,4 +1,4 @@
-Shader "Water/Simple/Bumped" {
+Shader "Custom/Water/Simple/Bumped" {
     Properties {
 	_WaveSpeed ("Wave speed", Vector) = (0,-1,0,0)
 	_Exposure ("Exposure", Float) = 1	

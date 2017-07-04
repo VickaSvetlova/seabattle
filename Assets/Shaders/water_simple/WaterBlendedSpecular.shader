@@ -1,4 +1,4 @@
-﻿Shader "Water/Simple/BlendedSpecular" {
+﻿Shader "Custom/Water/Simple/BlendedSpecular" {
     Properties {
 	_WaveSpeed ("Wave speed", Vector) = (1,-1,0.1,0.1)
 	_Exposure ("Exposure", Float) = 0.05

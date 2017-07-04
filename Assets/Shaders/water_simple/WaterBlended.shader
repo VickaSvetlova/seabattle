@@ -1,4 +1,4 @@
-﻿Shader "Water/Simple/Blended" {
+﻿Shader "Custom/Water/Simple/Blended" {
     Properties {
 	_WaveSpeed ("Wave speed", Vector) = (1,-1,0.1,0.1)
 	_Exposure ("Exposure", Float) = 0.05
@@ -7,7 +7,7 @@
     _BottomTex ("BottomTexture", 2D) = "white" {}
     }
     SubShader {
-    
+    Cull Off
 	Tags { "RenderType"="Opaque" }
 	LOD 250
     CGPROGRAM
