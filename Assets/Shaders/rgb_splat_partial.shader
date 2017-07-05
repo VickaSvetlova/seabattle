@@ -1,8 +1,9 @@
+// Alpha of color - intensity of mask
 Shader "Custom/RGB_splat_partial" {
 
     Properties {
-        _MainTex ("Texture", 2D) = "white" {}
-		_SkinTex ("Texture", 2D) = "white" {}
+        _MainTex ("Main texture", 2D) = "white" {}
+		_SkinTex ("Mask texture", 2D) = "white" {}
 		_MainColor ("Main color (red)", Color) = (1,1,1,1)
 		_AddColor ("Additional 1st color (green)", Color) = (1,1,1,1)
 		_ExtColor ("Additional 2nd color (blue)", Color) = (1,1,1,1)
@@ -46,18 +47,11 @@ Shader "Custom/RGB_splat_partial" {
 			}
 			float4 MyFragmentProgram (Interpolators i) : SV_TARGET {
 				float4 splat = tex2D(_SkinTex, i.uvSplat);
-
 				float4 tex = tex2D(_MainTex, i.uv);
-				float4 _m = _MainColor;
-				float4 _e = _ExtColor;
-				float4 _a = _AddColor;
-				_m.a = tex.a;
-				_e.a = tex.a;
-				_a.a = tex.a;
-				float4 color = tex * (1 - splat.r - splat.g - splat.b) +
-					 lerp (tex, _m, _MainColor.a) * splat.r +
-					 lerp (tex, _a, _AddColor.a) * splat.g +
-					 lerp (tex, _e, _ExtColor.a) * splat.b;
+				float4 color = float4(tex.rgb * (1 - splat.r - splat.g - splat.b) +
+					lerp (tex.rgb, _MainColor.rgb, _MainColor.a) * splat.r +
+					lerp (tex.rgb, _AddColor.rgb, _AddColor.a) * splat.g +
+					lerp (tex.rgb, _ExtColor.rgb, _ExtColor.a) * splat.b, splat.a);
 				return color;
 			}
 
