@@ -7,10 +7,10 @@ public class _CustomInput : MonoBehaviour {
     
     void Awake()
     {
-        if (Instance != null)
-        {
-            return;
-        }
+        Instance = this;
+    }
+    void Start()
+    {
         Instance = this;
     }
     //void OnEnable(){}

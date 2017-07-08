@@ -17,12 +17,15 @@ public class UI_script : MonoBehaviour {
     public Image img_body2;
     public Image img_team2;
     public Image img_ctrl2;
-    //void Awake(){}
     //void OnEnable(){}
     //void OnDisable(){}
     //void OnDestroy(){}
     //void OnGUI(){}
     void Start () {
+        if (!Instance) Instance = this;
+    }
+    void Awake()
+    {
         if (!Instance) Instance = this;
     }
     public enum ShipParent

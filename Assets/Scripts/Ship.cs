@@ -18,7 +18,8 @@ public class Ship : MonoBehaviour{
 
     void Start()
     {
-        data.tr = transform.parent;
+        data.tr_ship = transform.parent;
+        data.tr_cannon = transform.GetChild(0);
         newRotation = Quaternion.Euler(Random.Range(-maxAngleX, maxAngleX), 0f, 0f);
         timer = Random.Range(0f, timeToChange);
     }
@@ -32,7 +33,7 @@ public class Ship : MonoBehaviour{
             side_s = !side_s;
             timer = 0f;
         }
-        data.tr.localRotation = Quaternion.Slerp(oldRotation, newRotation, timer/timeToChange);
+        data.tr_ship.localRotation = Quaternion.Lerp(oldRotation, newRotation, timer / timeToChange);
         timer += Time.deltaTime;
         
     }

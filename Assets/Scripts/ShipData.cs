@@ -15,6 +15,10 @@ public class ShipData {
     public float health_team = 100f;
     public float health_control = 100f;
 
-    public Transform tr;
-
+    [Tooltip("Трансформ корабля")]
+    public Transform tr_ship;
+    [Tooltip("Трансформ пушки")]
+    public Transform tr_cannon;
+    [Tooltip("ID пушки")]
+    public int cannonID;
 }

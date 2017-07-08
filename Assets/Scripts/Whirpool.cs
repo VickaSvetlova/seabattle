@@ -26,27 +26,8 @@ public class Whirpool : MonoBehaviour {
     [SerializeField]
     [Tooltip("Енум управления газ/тормоз/ничего")]
     private Enum_control ship_move;
-    [Tooltip("Минимальный угол между кораблями")]
-    public float min_angle = 90f;
-    [Tooltip("Прицело")]
-    public Transform tr_aim;
-    public Transform tr_canvas_aim;
     [Tooltip("Идет ли прицеливание")]
     private bool isAiming = false;
-    [Tooltip("Спрайт левой части прицела")]
-    public Image _aim_left;
-    [Tooltip("Спрайт правой части прицела")]
-    public Image _aim_right;
-    [Tooltip("Цвет прицела в начале")]
-    public Color aim_color_start;
-    [Tooltip("Цвет прицела в конце")]
-    public Color aim_color_end;
-    [Tooltip("Размер сектора прицела в начале")]
-    public float aim_size_start = 0.075f;
-    [Tooltip("Размер сектора прицела в конце")]
-    public float aim_size_end = 0.01f;
-    [Tooltip("Время сведения")]
-    public float aim_time = 2f;
 
     private enum Enum_control
     {
@@ -85,33 +66,32 @@ public class Whirpool : MonoBehaviour {
     }
 #endregion
 
-   private void Awake()
+   void Awake()
     {
-        if (!Instance) Instance = this;
+        Instance = this;
         ship1 = GameObject.FindGameObjectWithTag("ship_player").GetComponent<Ship>().data;
         ship2 = GameObject.FindGameObjectWithTag("ship_enemy").GetComponent<Ship>().data;
-        _aim_left.enabled = false;
-        _aim_right.enabled = false;
         input = _CustomInput.Instance;
     }
-    private void Start()
+    void Start()
     {
         input = _CustomInput.Instance;
+        Instance = this;
     }
 
     void Update () {
         //WaterShift();
         //WaterRotate();
         float player_move = 0f;
-        float player_angle;
+        float player_angle = Vector3.Dot(ship1.tr_ship.position - tr_whirpool.position, ship2.tr_ship.position - tr_whirpool.position);
         if (ship_move == Enum_control.accelerate) player_move = ship1.accelerate;
         if (ship_move == Enum_control.brake) player_move = -ship1.brake;
         if (ship_move != Enum_control.none)
         {
-            Vector3 v1 = ship1.tr.position - tr_ship1.position;
-            Vector3 v2 = ship2.tr.position - tr_ship2.position;
+            Vector3 v1 = ship1.tr_ship.position - tr_whirpool.position;
+            Vector3 v2 = ship2.tr_ship.position - tr_whirpool.position;
             player_angle = Vector3.Angle(v1, v2);
-            if (player_angle < min_angle) player_move = 0f;
+            if ( player_angle < 0 ) player_move = 0f;
         }
         tr_whirpool.Rotate(Vector3.up, speed_whirpool * Time.deltaTime, Space.World);
         tr_ship1.Rotate(Vector3.up, (ship1.speed + player_move) * Time.deltaTime, Space.World);
@@ -121,39 +101,33 @@ public class Whirpool : MonoBehaviour {
         {
             if (input.isClick)
             {
-                isAiming = true;
-                _aim_left.enabled = true;
-                _aim_right.enabled = true;
-                RaycastHit rh;
-                Ray ray = Camera.main.ScreenPointToRay(input.position);
-                LayerMask lm = LayerMask.GetMask( "whirpool" );
-                if (Physics.Raycast(ray,out rh, 100f, lm))
+                if (!isAiming)
                 {
-                    Vector3 v1 = rh.point;
-                    v1.y = tr_canvas_aim.position.y;
-                    tr_canvas_aim.LookAt(v1);
+                    isAiming = true;
+                    RaycastHit rh;
+                    Ray ray = Camera.main.ScreenPointToRay(input.position);
+                    LayerMask lm = LayerMask.GetMask("whirpool");
+                    if (Physics.Raycast(ray, out rh, 100f, lm))
+                    {
+                        Vector3 v1 = rh.point;
+                        WeaponData.Instance.StartAiming(ship1.cannonID, v1);
+                    }
+                } else
+                {
+                    RaycastHit rh;
+                    Ray ray = Camera.main.ScreenPointToRay(input.position);
+                    LayerMask lm = LayerMask.GetMask("whirpool");
+                    if (Physics.Raycast(ray, out rh, 100f, lm))
+                    {
+                        Vector3 v1 = rh.point;
+                        WeaponData.Instance.ProcessAiming(v1);
+                    }
                 }
-                _aim_left.fillAmount -= (aim_size_start - aim_size_end) * (Time.deltaTime / aim_time);
-                _aim_left.fillAmount = Mathf.Clamp(_aim_left.fillAmount, aim_size_end, aim_size_start);
-                _aim_right.fillAmount -= (aim_size_start - aim_size_end) * (Time.deltaTime / aim_time);
-                _aim_right.fillAmount = Mathf.Clamp(_aim_right.fillAmount, aim_size_end, aim_size_start);
-
-                float diap = aim_size_start - aim_size_end;
-                float coef = 1 / diap;
-                _aim_left.color = Color.Lerp(aim_color_end, aim_color_start, (_aim_left.fillAmount - aim_size_end) * coef );
-                _aim_right.color = _aim_left.color;
             }
             else if (isAiming)
             {
                 isAiming = false;
-                float aimSector = _aim_left.fillAmount;
-                // выстрел
-                _aim_left.fillAmount = aim_size_start;
-                _aim_right.fillAmount = aim_size_start;
-                _aim_left.color = aim_color_start;
-                _aim_right.color = aim_color_start;
-                _aim_left.enabled = false;
-                _aim_right.enabled = false;
+                WeaponData.Instance.EndAiming();
             }
         }
     }
