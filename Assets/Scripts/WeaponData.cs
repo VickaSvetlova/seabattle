@@ -108,19 +108,25 @@ public class WeaponData : MonoBehaviour {
 
     public void ProcessAiming(Vector3 _pos)
     {
-        aim_left.fillAmount -= (cannons[cid].maxAim - cannons[cid].minAim) * (Time.deltaTime / cannons[cid].aimTime);
-        aim_left.fillAmount = Mathf.Clamp(aim_left.fillAmount, cannons[cid].minAim, cannons[cid].maxAim);
-        aim_right.fillAmount = aim_left.fillAmount;
+        if (cannons[cid].hasMaxAngle)
+        {
+            aim_left.fillAmount -= (cannons[cid].maxAim - cannons[cid].minAim) * (Time.deltaTime / cannons[cid].aimTime);
+            aim_left.fillAmount = Mathf.Clamp(aim_left.fillAmount, cannons[cid].minAim, cannons[cid].maxAim);
+            aim_right.fillAmount = aim_left.fillAmount;
+        }
         _pos.y = tr_canvas_aim.position.y;
         if (cannons[cid].isTrackable)
         {
             tr_canvas_aim.LookAt(_pos);
-            aim_left.color = Color.Lerp(aim_color_end, aim_color_start,
-                    (aim_left.fillAmount - cannons[cid].minAim) / (cannons[cid].maxAim - cannons[cid].minAim));
-            aim_right.color = aim_left.color;
         } else
         {
             tr_canvas_aim.LookAt(aim_point);
+        }
+        if (cannons[cid].hasMaxAngle)
+        {
+            aim_left.color = Color.Lerp(aim_color_end, aim_color_start,
+                (aim_left.fillAmount - cannons[cid].minAim) / (cannons[cid].maxAim - cannons[cid].minAim));
+            aim_right.color = aim_left.color;
         }
     }
 
@@ -128,5 +134,11 @@ public class WeaponData : MonoBehaviour {
     {
         aim_left.enabled = false;
         aim_right.enabled = false;
+        DamnShootEm();
+    }
+
+    public void DamnShootEm()
+    {
+
     }
 }

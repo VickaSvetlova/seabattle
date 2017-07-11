@@ -3,7 +3,8 @@
 [System.Serializable]
 public class ShipData {
     [Header("Скорость")]
-    public float speed = 20f;
+    [Tooltip("Замедление от скорости водоворота")]
+    public float speed = -5f;
     public float accelerate = 10f;
     public float brake = 15f;
     [Header("Максимальные значения")]
@@ -21,4 +22,10 @@ public class ShipData {
     public Transform tr_cannon;
     [Tooltip("ID пушки")]
     public int cannonID;
+
+    [Header("Данные для качки")]
+    [Tooltip("Время смены наклона")]
+    public float timeToChange = 1f;
+    [Tooltip("Угол наклона крен")]
+    public float maxAngleX = 15f;
 }

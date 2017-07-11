@@ -5,11 +5,6 @@ public class Ship : MonoBehaviour{
 
     [Header("Класс с данными корабля")]
     public ShipData data;
-    [Header("Данные для качки")]
-    [Tooltip("Время смены наклона")]
-    public float timeToChange = 1f;
-    [Tooltip("Угол наклона крен")]
-    public float maxAngleX = 15f;
 
     private Quaternion oldRotation = Quaternion.identity;
     private Quaternion newRotation = Quaternion.identity;
@@ -20,20 +15,24 @@ public class Ship : MonoBehaviour{
     {
         data.tr_ship = transform.parent;
         data.tr_cannon = transform.GetChild(0);
-        newRotation = Quaternion.Euler(Random.Range(-maxAngleX, maxAngleX), 0f, 0f);
-        timer = Random.Range(0f, timeToChange);
+        timer = Random.Range(0f, data.timeToChange);
+        oldRotation = Quaternion.Euler(data.maxAngleX, 0f, 0f);
+        newRotation = Quaternion.Euler(0f, 0f, 0f);
+//        oldRotation = Quaternion.Euler(data.maxAngleX, 0f, 0f);
+//        newRotation = Quaternion.Euler(-data.maxAngleX, 0f, 0f);
     }
 
     private void Update()
     {
-        if (timer >= timeToChange)
+        if (timer >= data.timeToChange)
         {
-            oldRotation = newRotation;
-            newRotation = Quaternion.Euler((side_s ? -maxAngleX : maxAngleX), 0f, 0f);
-            side_s = !side_s;
+//            oldRotation = newRotation;
+//            newRotation = Quaternion.Euler((side_s ? -data.maxAngleX : data.maxAngleX), 0f, 0f);
+//            side_s = !side_s;
             timer = 0f;
         }
-        data.tr_ship.localRotation = Quaternion.Lerp(oldRotation, newRotation, timer / timeToChange);
+        float coeff = (Mathf.Sin(2 * Mathf.PI * timer / data.timeToChange - Mathf.PI / 2) + 1f) / 2f;
+        data.tr_ship.localRotation = Quaternion.Lerp(oldRotation, newRotation, coeff);
         timer += Time.deltaTime;
         
     }

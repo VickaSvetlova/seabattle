@@ -94,8 +94,8 @@ public class Whirpool : MonoBehaviour {
             if ( player_angle < 0 ) player_move = 0f;
         }
         tr_whirpool.Rotate(Vector3.up, speed_whirpool * Time.deltaTime, Space.World);
-        tr_ship1.Rotate(Vector3.up, (ship1.speed + player_move) * Time.deltaTime, Space.World);
-        tr_ship2.Rotate(Vector3.up, (ship2.speed) * Time.deltaTime, Space.World);
+        tr_ship1.Rotate(Vector3.up, (speed_whirpool - ship1.speed + player_move) * Time.deltaTime, Space.World);
+        tr_ship2.Rotate(Vector3.up, (speed_whirpool - ship2.speed) * Time.deltaTime, Space.World);
 
         if (ship_move == Enum_control.none)
         {
