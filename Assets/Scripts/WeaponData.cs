@@ -74,17 +74,20 @@ public class WeaponData : MonoBehaviour {
     public CannonItem[] cannons;
     public AmmoItem[] ammos;
 
-    [Tooltip("Прицел")]
-    public Transform tr_aim;
-    public Transform tr_canvas_aim;
-    [Tooltip("Спрайт левой части прицела")]
-    public Image aim_left;
-    [Tooltip("Спрайт правой части прицела")]
-    public Image aim_right;
+    [Header("Прицел - общее")]
     [Tooltip("Цвет прицела в начале")]
     public Color aim_color_start;
     [Tooltip("Цвет прицела в конце")]
     public Color aim_color_end;
+
+    [Header("Прицел пушки")]
+    [Tooltip("Трансформ прицела пушки")]
+    public Transform tr_aim;
+    public Transform tr_canvas_aim;
+    [Tooltip("Спрайт левой части прицела пушки")]
+    public Image aim_left;
+    [Tooltip("Спрайт правой части прицела пушки")]
+    public Image aim_right;
 
     private int cid;
     private Vector3 aim_point;
