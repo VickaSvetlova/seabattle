@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 public class Whirpool : MonoBehaviour {
 
@@ -106,7 +107,7 @@ public class Whirpool : MonoBehaviour {
 
         if (ship_move == Enum_control.none)
         {
-            if (input.isClick && !(ship1.cannonReload || ship1.cannonSwitch) )
+            if ( input.isClick && !(ship1.cannonReload || ship1.cannonSwitch) && !EventSystem.current.IsPointerOverGameObject() )
             {
                 if (!isAiming)
                 {

@@ -157,7 +157,7 @@ public class WeaponData : MonoBehaviour {
                 break;
             }
         }
-        if (!cannons[cid].isTrackable)
+        if (!cannons[cid].hasMaxAngle)
         {
             aim_left.color = aim_color_end;
             aim_right.color = aim_left.color;

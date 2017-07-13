@@ -23,13 +23,15 @@ public class ShipData {
     [Tooltip("ID пушки")]
     public int cannonID;
     [Tooltip("Флаг перезарядки")]
-    public bool cannonReload = false;
+    public bool cannonReload = true;
     [Tooltip("Флаг переключения")]
     public bool cannonSwitch = false;
     [Tooltip("Таймер перезарядки")]
     public float cannonReloadTimer = 0f;
+    public float maxReloadTime = 3f;
     [Tooltip("Таймер переключения")]
     public float cannonSwitchTimer = 0f;
+    public float maxSwitchTime = 0f;
 //    [Tooltip("")]
 
     [Header("Данные для качки")]
@@ -41,27 +43,29 @@ public class ShipData {
     public void ReloadCannon()
     {
         cannonReload = true;
-        cannonReloadTimer = WeaponData.Instance.cannons[cannonID].reloadTime;
+        cannonReloadTimer = 0f;
+        maxReloadTime = WeaponData.Instance.cannons[cannonID].reloadTime;
     }
 
     public void SwitchCannon(int id)
     {
         cannonSwitch = true;
-        cannonSwitchTimer = WeaponData.Instance.cannons[cannonID].switchTime;
+        cannonSwitchTimer = 0f;
+        maxSwitchTime = WeaponData.Instance.cannons[cannonID].switchTime;
     }
 
     public void ProcessTimers(float t)
     {
         if (cannonReload)
         {
-            cannonReloadTimer -= t;
-            if (cannonReloadTimer <= 0f)
+            cannonReloadTimer += t;
+            if (cannonReloadTimer >= maxReloadTime)
                 cannonReload = false;
         }
         if (cannonSwitch)
         {
-            cannonSwitchTimer -= t;
-            if (cannonSwitchTimer <= 0f)
+            cannonSwitchTimer += t;
+            if (cannonSwitchTimer >= maxSwitchTime)
                 cannonSwitch = false;
         }
     }
@@ -88,4 +92,5 @@ public class ShipData {
             health_control = Mathf.Clamp(health_control - ctrl_dmg, 0f, health_control_max);
         }
     }
+
 }

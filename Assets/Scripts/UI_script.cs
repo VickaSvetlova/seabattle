@@ -66,16 +66,18 @@ public class UI_script : MonoBehaviour {
         {
             case ShipParent.Player:
             {
-                panel_health.img_body1.fillAmount = sd.health_body/sd.health_body_max;
-                panel_health.img_team1.fillAmount = sd.health_team/sd.health_team_max;
-                panel_health.img_ctrl1.fillAmount = sd.health_control/sd.health_control_max;
+                    panel_health.img_reload1.fillAmount = sd.cannonReloadTimer / sd.maxReloadTime;
+                    panel_health.img_body1.fillAmount = sd.health_body / sd.health_body_max;
+                    panel_health.img_team1.fillAmount = sd.health_team / sd.health_team_max;
+                    panel_health.img_ctrl1.fillAmount = sd.health_control / sd.health_control_max;
                 return;
             }
             case ShipParent.Enemy:
             {
-                panel_health.img_body2.fillAmount = sd.health_body/sd.health_body_max;
-                panel_health.img_team2.fillAmount = sd.health_team/sd.health_team_max;
-                panel_health.img_ctrl2.fillAmount = sd.health_control/sd.health_control_max;
+                    panel_health.img_reload2.fillAmount = sd.cannonReloadTimer / sd.maxReloadTime;
+                    panel_health.img_body2.fillAmount = sd.health_body / sd.health_body_max;
+                    panel_health.img_team2.fillAmount = sd.health_team / sd.health_team_max;
+                    panel_health.img_ctrl2.fillAmount = sd.health_control / sd.health_control_max;
                 return;
                 }
             default: return;
