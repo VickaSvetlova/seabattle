@@ -2,7 +2,7 @@ Shader "Custom/RGB_splat" {
 
     Properties {
         _MainTex ("Main texture", 2D) = "white" {}
-	_SkinTex ("Skin texture", 2D) = "white" {}
+	_SkinTex ("Mask texture", 2D) = "white" {}
 	_MainColor ("Main color (red)", Color) = (1,1,1,1)
 	_AddColor ("Additional 1st color (green)", Color) = (1,1,1,1)
 	_ExtColor ("Additional 2nd color (blue)", Color) = (1,1,1,1)
