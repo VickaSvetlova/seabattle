@@ -28,6 +28,7 @@ public class Whirpool : MonoBehaviour {
     private Enum_control ship_move;
     [Tooltip("Идет ли прицеливание")]
     private bool isAiming = false;
+    private Vector3 last_pos;
 
     private enum Enum_control
     {
@@ -82,6 +83,12 @@ public class Whirpool : MonoBehaviour {
     void Update () {
         //WaterShift();
         //WaterRotate();
+
+        // отдаём время в корабли, чтобы таймеры перезарядки и переключения работали
+        ship1.ProcessTimers(Time.deltaTime);
+        ship2.ProcessTimers(Time.deltaTime);
+        // ------------------
+
         float player_move = 0f;
         float player_angle = Vector3.Dot(ship1.tr_ship.position - tr_whirpool.position, ship2.tr_ship.position - tr_whirpool.position);
         if (ship_move == Enum_control.accelerate) player_move = ship1.accelerate;
@@ -99,7 +106,7 @@ public class Whirpool : MonoBehaviour {
 
         if (ship_move == Enum_control.none)
         {
-            if (input.isClick)
+            if (input.isClick && !(ship1.cannonReload || ship1.cannonSwitch) )
             {
                 if (!isAiming)
                 {
@@ -121,13 +128,14 @@ public class Whirpool : MonoBehaviour {
                     {
                         Vector3 v1 = rh.point;
                         WeaponData.Instance.ProcessAiming(v1);
+                        last_pos = v1;
                     }
                 }
             }
             else if (isAiming)
             {
                 isAiming = false;
-                WeaponData.Instance.EndAiming();
+                WeaponData.Instance.EndAiming(last_pos);
             }
         }
     }

@@ -31,6 +31,10 @@ public class CannonItem
     public bool isTrackable = true;
     [Tooltip("Тип прицела")]
     public AimType aimType = AimType.Cannon;
+    [Tooltip("Анимация полета")]
+    public ShootAnimation anima = ShootAnimation.Linear;
+//    [Tooltip("")]
+//    [Tooltip("")]
 }
 
 [System.Serializable]
@@ -48,6 +52,8 @@ public class AmmoItem
     public float critMultiplier = 3f;
     [Tooltip("Шанс промаха")]
     public float missChance = 15f;
+    [Tooltip("Скорость полёта")]
+    public float velocity = 5f;
 }
 
 [System.Serializable]
@@ -64,7 +70,15 @@ public enum AimType
     Mortar = 1
 }
 
+public enum ShootAnimation
+{
+    Linear = 0,
+    Ballistic = 1,
+    Momental = 2
+}
+
 public class WeaponData : MonoBehaviour {
+
     #region Singleton-style
     public static WeaponData Instance { private set; get; }
     void Awake()
@@ -76,11 +90,16 @@ public class WeaponData : MonoBehaviour {
         Instance = this;
         aim_left.enabled = false;
         aim_right.enabled = false;
+        aim_mortar.enabled = false;
     }
     #endregion
+    public bool debug_aim = false;
 
     public CannonItem[] cannons;
     public AmmoItem[] ammos;
+
+    [Header("Разное")]
+    public GameObject bullet;
 
     [Header("Прицел - общее")]
     [Tooltip("Цвет прицела в начале")]
@@ -198,27 +217,61 @@ public class WeaponData : MonoBehaviour {
         }
     }
 
-    public void EndAiming()
+    public void EndAiming(Vector3 _pos)
     {
+        float aim_value = 0f;
         switch (cannons[cid].aimType)
         {
             case AimType.Cannon:
             {
-                aim_left.enabled = false;
-                aim_right.enabled = false;
+                aim_left.enabled = debug_aim;
+                aim_right.enabled = debug_aim;
+                aim_value = aim_right.fillAmount * 360f;
                 break;
             }
             case AimType.Mortar:
             {
-                aim_mortar.enabled = false;
+                aim_mortar.enabled = debug_aim;
+                aim_value = tr_mortar_aim.localScale.x;
                 break;
             }
         }
-        DamnShootEm();
+        DamnShootEm(_pos, aim_value);
     }
 
-    public void DamnShootEm()
+    public void DamnShootEm(Vector3 _pos, float _aim_value)
     {
+        Vector3 cannon = Whirpool.Instance.ship1.tr_cannon.position;
+        Vector3 cannon_dir = Whirpool.Instance.ship1.tr_cannon.forward;
 
+        switch (cannons[cid].anima)
+        {
+            case ShootAnimation.Linear:
+                {
+                    GameObject go = (GameObject)Instantiate(bullet, cannon, Quaternion.identity);
+                    go.transform.position = Whirpool.Instance.ship1.tr_cannon.position;
+                    Vector3 dir = _pos - Whirpool.Instance.ship1.tr_cannon.position;
+                    dir.y = 0f;
+                    dir.Normalize();
+                    go.transform.forward = dir;
+                    go.transform.Rotate(Vector3.up, Random.Range(-_aim_value/2f, _aim_value), Space.World);
+                    go.GetComponent<Rigidbody>().velocity = go.transform.forward * ammos[cannons[cid].ammoType].velocity;
+                    go.GetComponent<Bullet>().ammoID = cannons[cid].ammoType;
+                    go.GetComponent<Bullet>().parent = Whirpool.Instance.ship1.tr_ship;
+                    Whirpool.Instance.ship1.ReloadCannon();
+                    break;
+                }
+            case ShootAnimation.Ballistic:
+                {
+                    Whirpool.Instance.ship1.ReloadCannon();
+                    break;
+                }
+            case ShootAnimation.Momental:
+                {
+                    Whirpool.Instance.ship2.Damage(cannons[cid].ammoType);
+                    Whirpool.Instance.ship1.ReloadCannon();
+                    break;
+                }
+        }
     }
 }

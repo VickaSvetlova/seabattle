@@ -5,6 +5,7 @@ public class Ship : MonoBehaviour{
 
     [Header("Класс с данными корабля")]
     public ShipData data;
+    public bool forToriTest = true;
 
     private Quaternion oldRotation = Quaternion.identity;
     private Quaternion newRotation = Quaternion.identity;
@@ -15,8 +16,15 @@ public class Ship : MonoBehaviour{
         data.tr_ship = transform.parent;
         data.tr_cannon = transform.GetChild(0);
         timer = Random.Range(0f, data.timeToChange);
-        oldRotation = Quaternion.Euler(data.maxAngleX, 0f, 0f);
-        newRotation = Quaternion.Euler(0f, 0f, 0f);
+        if (forToriTest)
+        {
+            oldRotation = Quaternion.Euler(data.maxAngleX, 0f, 0f);
+            newRotation = Quaternion.Euler(0f, 0f, 0f);
+        } else
+        {
+            oldRotation = Quaternion.Euler(0f, 0f, data.maxAngleX/2f);
+            newRotation = Quaternion.Euler(0f, 0f, -data.maxAngleX/2f);
+        }
     }
 
     private void Update()

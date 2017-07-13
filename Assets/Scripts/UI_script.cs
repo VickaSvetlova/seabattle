@@ -8,10 +8,12 @@ public class Panel_health_config
     public Transform ship_1_UI;
     public Transform ship_2_UI;
     public RectTransform panel_ship1;
+    public Image img_reload1;
     public Image img_body1;
     public Image img_team1;
     public Image img_ctrl1;
     public RectTransform panel_ship2;
+    public Image img_reload2;
     public Image img_body2;
     public Image img_team2;
     public Image img_ctrl2;
@@ -85,7 +87,6 @@ public class UI_script : MonoBehaviour {
     [Header("Выбор оружия")]
     public Weapon_config_class weapon_config;
     private int old_wpn = -1;
-    private int wpn = 0;
     public void WeaponClick(int value)
     {
         switch (weapon_config.canColor)
