@@ -56,7 +56,7 @@ public class ShipData {
 
     public void ProcessTimers(float t)
     {
-        if (cannonReload)
+        if (cannonReload && !cannonSwitch)
         {
             cannonReloadTimer += t;
             if (cannonReloadTimer >= maxReloadTime)

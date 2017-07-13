@@ -107,7 +107,8 @@ public class Whirpool : MonoBehaviour {
 
         if (ship_move == Enum_control.none)
         {
-            if ( input.isClick && !(ship1.cannonReload || ship1.cannonSwitch) && !EventSystem.current.IsPointerOverGameObject() )
+            if ( input.isClick && !(ship1.cannonReload || ship1.cannonSwitch) && !EventSystem.current.IsPointerOverGameObject() /* */)
+                
             {
                 if (!isAiming)
                 {
@@ -115,7 +116,7 @@ public class Whirpool : MonoBehaviour {
                     RaycastHit rh;
                     Ray ray = Camera.main.ScreenPointToRay(input.position);
                     LayerMask lm = LayerMask.GetMask("whirpool");
-                    if (Physics.Raycast(ray, out rh, 100f, lm))
+                    if (CustomRaycast(ray, out rh, lm))
                     {
                         Vector3 v1 = rh.point;
                         WeaponData.Instance.StartAiming(ship1.cannonID, v1);
@@ -125,7 +126,7 @@ public class Whirpool : MonoBehaviour {
                     RaycastHit rh;
                     Ray ray = Camera.main.ScreenPointToRay(input.position);
                     LayerMask lm = LayerMask.GetMask("whirpool");
-                    if (Physics.Raycast(ray, out rh, 100f, lm))
+                    if (CustomRaycast(ray, out rh, lm))
                     {
                         Vector3 v1 = rh.point;
                         WeaponData.Instance.ProcessAiming(v1);
@@ -145,6 +146,30 @@ public class Whirpool : MonoBehaviour {
         UI_script.Instance.SetHealthShip(UI_script.ShipParent.Enemy, ship2);
     }
     //void FixedUpdate () {}
+    private bool CustomRaycast(Ray _ray, out RaycastHit _rh, LayerMask _lm)
+    {
+        _rh = new RaycastHit();
+        RaycastHit[] rh = Physics.RaycastAll(_ray, 100f, _lm);
+        int index = -1;
+        if (rh.Length > 0)
+            for (int i = 0; i < rh.Length; i++)
+            {
+                if (index < 0)
+                {
+                    index = i;
+                } else
+                {
+                    if (rh[i].distance < rh[index].distance)
+                        index = i;
+                }
+            }
+        if (index >= 0)
+        {
+            _rh = rh[index];
+            return true;
+        }
+        return false;
+    }
 
     public void ImageDown(int value)
     {

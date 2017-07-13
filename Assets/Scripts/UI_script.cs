@@ -124,6 +124,8 @@ public class UI_script : MonoBehaviour {
         }
         old_wpn = value;
         Whirpool.Instance.ship1.cannonID = value;
+        Whirpool.Instance.ship1.SwitchCannon(value);
+        Whirpool.Instance.ship1.ReloadCannon();
     }
 
 #endregion
